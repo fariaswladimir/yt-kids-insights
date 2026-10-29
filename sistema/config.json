@@ -1,0 +1,44 @@
+{
+  "janela_dias": 92,
+  "limite_gap_min": 30,
+  "ultimo_video_min": 4,
+  "referencia_min_dia": 60,
+  "buscar_titulos_online": true,
+  "canais_infantis": [
+    "SBT Kids", "+ SBT", "Tiquequê", "Mari Bigio - Cordel Animado", "Palavra Cantada Oficial", "Maria Clara & JP", "MILENINHA",
+    "Cidade Encantada", "Mundo Maria Clara e JP", "Família Maria Clara e JP", "Os Amiguinhos Contos e Historinhas", "Os Amiguinhos",
+    "Tá na hora do Teatro - Cia Arte & Manhas", "TV ZYN", "barbatuques", "Grupo Triii", "FitDance Kids", "Memórias do Picapau Amarelo",
+    "PartimpimVEVO", "Bosque Encena", "Hélio Ziskind", "Câmeras Escondidas Programa Silvio Santos", "MOMMY DOLL",
+    "ZiS é o Canal (Músicas para Crianças)", "TUNE: Kids", "Pé de Sonho", "Mundo Aflora", "Colégio PLUS", "Cia Era Uma Vez",
+    "Skywalker Pan", "★ Kids Roma Show", "Sofia Little Princess", "Slick Slime Sam Global", "Lala Toys", "CUTE DİSNEY MAGİC", "Alice",
+    "Play Here", "Conta Lelê", "Upadupa TV | Aprendizado, Música e Diversão", "WorKids", "KONDOSAN em Português - Contos de Fadas",
+    "We Love Face Paint!", "Relicário de Contos", "Polly Bailarina", "Mundo Bita", "Vooks - Stories and Read Alouds for Kids",
+    "Show da Flora", "Turma da Mônica", "The Fable Cottage", "Galinha Pintadinha", "Riley’s World", "Yoshizato Produções Artísticas",
+    "Imaginarium Theatre Co.", "Dani Bassi", "Ever Laughter Parties", "DisneyMusicVEVO", "DisneyMusicBRVEVO", "Zamy Baumüller",
+    "Caty Victori", "The Crosbys", "Gaia Musical 가이아 뮤지컬", "Tiny Joy Bakes", "Globoplay Kids", "Peppa Pig em Português", "Bob Zoom",
+    "Luccas Toon", "Patati Patatá", "Cocomelon - Nursery Rhymes", "Bluey em Português - Canal Oficial", "Pocoyo em Português",
+    "Masha e o Urso", "Disney Junior Brasil", "Discovery Kids Brasil", "Little Angel Português", "Castelo Rá-Tim-Bum", "O Show da Luna",
+    "Lucas Neto", "Varal de Histórias", "Mabô e Fifi", "Xuxa"
+  ],
+  "canais_excluidos": [
+    "Sociocrônica", "Ezell", "Mayra Gaiato | Desenvolvimento Infantil e Autismo", "Dra Jannuzzi", "Roda Viva", "Pausa Literária",
+    "Rolandinho - Cinema, Séries e +!", "FastFashion", "nectar", "Fama Flash", "Estranha História", "InvestNews BR", "g1",
+    "BBC News Brasil", "IGN", "A Cortadora", "Globoplay", "Pablo Mingoti"
+  ],
+  "palavras_infantis": "infantil|para crian[çc]as|for kids|kids songs|nursery|toddler|preschool|cantigas?|m[úu]sica.*beb[eê]|historinhas?|desenho animado|picapau amarelo|pica pau amarelo|turma da m[ôo]nica|mundo bita|galinha pintadinha|peppa|bluey|cocomelon|pocoyo|patati|bob zoom|luccas neto|maria clara e jp|castelo r[áa]-tim-bum|tiquequ[êe]|palavra cantada|show da luna|masha|patrulha canina|paw patrol|baby shark|pinkfong|princesas?|frozen|moana|encanto|branca de neve|cinderela|rapunzel|chapeuzinho|tr[êe]s porquinhos|jo[ãa]o e maria|bela adormecida|pin[óo]quio|gato gal[áa]ctico|mileninha|disney junior|discovery kids|cordel para crian|teatro infantil|contos? de fadas|read aloud|fitdance kids|anittinha|toy story",
+  "categorias": [
+    {"nome": "Desenhos / TV infantil",
+     "canais": ["SBT Kids", "+ SBT", "TV ZYN", "Memórias do Picapau Amarelo", "Câmeras Escondidas Programa Silvio Santos", "Globoplay Kids", "Peppa Pig em Português", "Bluey em Português - Canal Oficial", "Pocoyo em Português", "Masha e o Urso", "Disney Junior Brasil", "Discovery Kids Brasil", "Turma da Mônica", "O Show da Luna", "Mabô e Fifi"],
+     "palavras": "picapau|pica pau|epis[óo]dio|desenho"},
+    {"nome": "Youtubers mirins / brinquedos",
+     "canais": ["Maria Clara & JP", "Mundo Maria Clara e JP", "Família Maria Clara e JP", "MILENINHA", "WorKids", "MOMMY DOLL", "Luccas Toon", "Lucas Neto", "Skywalker Pan", "Lala Toys", "Slick Slime Sam Global", "Sofia Little Princess", "★ Kids Roma Show", "Alice"],
+     "palavras": "brinquedo|unboxing|toys?\\b|slime"},
+    {"nome": "Teatro, contos e cordel",
+     "canais": ["Cidade Encantada", "Tá na hora do Teatro - Cia Arte & Manhas", "Bosque Encena", "Os Amiguinhos Contos e Historinhas", "Os Amiguinhos", "Mari Bigio - Cordel Animado", "Conta Lelê", "Vooks - Stories and Read Alouds for Kids", "The Fable Cottage", "Relicário de Contos", "KONDOSAN em Português - Contos de Fadas", "Colégio PLUS", "Cia Era Uma Vez", "Varal de Histórias"],
+     "palavras": "teatro|conto|cordel|historinha|hist[óo]ria"},
+    {"nome": "Disney / princesas",
+     "canais": ["DisneyMusicVEVO", "DisneyMusicBRVEVO", "Zamy Baumüller", "Caty Victori", "The Crosbys", "Gaia Musical 가이아 뮤지컬"],
+     "palavras": "disney|frozen|moana|encanto|princes"}
+  ],
+  "categoria_padrao": "Música infantil e brincadeiras"
+}

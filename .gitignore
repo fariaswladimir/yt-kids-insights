@@ -1,0 +1,25 @@
+# Lista branca: tudo é ignorado, exceto o código e a documentação.
+# Os dados de visualização (base, cache, relatórios, Takeouts) NUNCA devem ir para o repositório.
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/*.bat
+!/docs/
+!/sistema/
+!/entrada/
+!/relatorios/
+!/processados/
+
+/sistema/*
+!/sistema/processar.py
+!/sistema/template.html
+!/sistema/config.json
+!/sistema/gerar_demo.py
+
+/entrada/*
+!/entrada/coloque aqui o takeout.txt
+/relatorios/*
+!/relatorios/.gitkeep
+/processados/*
+!/processados/.gitkeep

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Consumo Infantil YouTube</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1d1b;--mut:#6b6a66;--line:#e4e2dc;--c1:#2f6fdf;--c2:#e3742f;--c3:#2a9d8f;--c4:#a05cc9;--adulto:#9a9892;--warn:#b3261e;--ok:#1e7a46}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151514;--card:#1f1f1d;--ink:#eceae4;--mut:#a3a19b;--line:#33322f;--c1:#6f9dff;--c2:#ff9a5c;--c3:#4fd1c0;--c4:#c48ef0;--adulto:#6b6a66;--warn:#ff8a80;--ok:#6fd39a}}
+:root[data-theme="dark"]{--bg:#151514;--card:#1f1f1d;--ink:#eceae4;--mut:#a3a19b;--line:#33322f;--c1:#6f9dff;--c2:#ff9a5c;--c3:#4fd1c0;--c4:#c48ef0;--adulto:#6b6a66;--warn:#ff8a80;--ok:#6fd39a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:34px 0 10px}.sub{color:var(--mut);margin:0 0 20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi b{display:block;font-size:26px;line-height:1.2}.kpi span{color:var(--mut);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.ch{position:relative;height:280px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.insight{border-left:4px solid var(--c1);padding:10px 14px;background:var(--card);border-radius:0 10px 10px 0;margin:10px 0}
+.insight.w{border-color:var(--warn)}.insight.g{border-color:var(--ok)}
+.note{color:var(--mut);font-size:13px}.scroll{overflow-x:auto}
+</style>
+</head>
+<body><main>
+<h1>Consumo de conteúdo infantil no YouTube</h1>
+<p class="sub" id="sub"></p>
+<div class="kpis" id="kpis"></div>
+
+<h2>Principais conclusões</h2>
+<div id="insights"></div>
+
+<h2>Tendência: horas de conteúdo infantil por mês (histórico completo)</h2>
+<div class="card"><div class="ch" style="height:320px"><canvas id="cTend"></canvas></div><p class="note">Linha tracejada cinza = conteúdo não infantil, para referência.</p></div>
+
+<h2>Carga semanal</h2>
+<div class="card"><div class="ch"><canvas id="cSem"></canvas></div></div>
+
+<h2>Carga diária (minutos/dia)</h2>
+<div class="card"><div class="ch"><canvas id="cDia"></canvas></div><p class="note" id="refNote"></p></div>
+
+<div class="grid2">
+ <div><h2>Em que horário</h2><div class="card"><div class="ch"><canvas id="cHora"></canvas></div><p class="note">Média de minutos por dia em cada hora.</p></div></div>
+ <div><h2>Em que dia da semana</h2><div class="card"><div class="ch"><canvas id="cDow"></canvas></div><p class="note">Média de minutos por dia.</p></div></div>
+</div>
+
+<h2>Dias úteis × fim de semana</h2>
+<div class="kpis" id="kpisU"></div>
+<div id="insU"></div>
+<div class="grid2">
+ <div><div class="card"><div class="ch"><canvas id="cUMes"></canvas></div><p class="note">Média de minutos por dia em cada mês.</p></div></div>
+ <div><div class="card"><div class="ch"><canvas id="cUHora"></canvas></div><p class="note">Minutos por dia em cada hora.</p></div></div>
+</div>
+<div class="grid2">
+ <div><div class="card scroll"><table id="tDow"></table></div></div>
+ <div><div class="card scroll"><table id="tUCan"></table></div></div>
+</div>
+
+<div class="grid2">
+ <div><h2>Tipo de conteúdo</h2><div class="card"><div class="ch"><canvas id="cCat"></canvas></div></div></div>
+ <div><h2>Mês a mês</h2><div class="card scroll"><table id="tMes"></table></div></div>
+</div>
+
+<h2>Canais mais assistidos</h2>
+<div class="card scroll"><table id="tCan"></table></div>
+
+<div class="grid2">
+ <div><h2>Vídeos mais repetidos</h2><div class="card scroll"><table id="tRep"></table></div></div>
+ <div><h2>Sessões mais longas</h2><div class="card scroll"><table id="tSes"></table></div></div>
+</div>
+
+<h2>Como os números foram calculados</h2>
+<div class="card note" id="metodo"></div>
+</main>
+<script>
+const D = __DATA__;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COR = ['--c1', '--c2', '--c3', '--c4'].map(css), MUT = css('--mut'), LINE = css('--line'), W = css('--warn'), AD = css('--adulto');
+Chart.defaults.color = MUT; Chart.defaults.borderColor = LINE; Chart.defaults.font.family = 'system-ui,Segoe UI,Roboto,sans-serif';
+const fmt = x => x.toLocaleString('pt-BR', {maximumFractionDigits: 1, minimumFractionDigits: 1});
+const hm = m => { m = Math.round(m); return m >= 60 ? `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}` : `${m} min`; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const M = D.meta, P = D.perfis;
+const cor = p => COR[P.indexOf(p) % COR.length];
+const stack = (serie, unit) => Object.entries(serie).map(([p, d]) => ({label: p, data: d, backgroundColor: cor(p), stack: 's', _u: unit}));
+const tip = fn => ({callbacks: {label: c => `${c.dataset.label}: ${fn(c.raw)}`}});
+const kp = (el, l) => document.getElementById(el).innerHTML = l.map(([v, t]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(t)}</span></div>`).join('');
+const ins = (el, l) => document.getElementById(el).innerHTML = l.map(([c, t]) => `<div class="insight ${c}">${t}</div>`).join('');
+
+document.getElementById('sub').textContent = `Perfis: ${P.join(', ')} · período ${M.inicio} a ${M.fim} (${M.dias} dias) · gerado em ${M.gerado}`;
+kp('kpis', D.kpis); ins('insights', D.insights);
+document.getElementById('refNote').textContent = `Linha tracejada = ${hm(M.ref)} por dia (referência da OMS/SBP para crianças de 2 a 5 anos).`;
+
+new Chart(cTend, {type: 'bar', data: {labels: D.tendencia.labels, datasets: [...stack(D.tendencia.series),
+ {label: 'Não infantil', type: 'line', data: D.tendencia.adulto, borderColor: AD, pointRadius: 0, borderWidth: 2, borderDash: [4, 4]}]},
+ options: {maintainAspectRatio: false, plugins: {tooltip: tip(v => `${fmt(v)} h`)}, scales: {y: {title: {display: true, text: 'horas/mês'}}}}});
+new Chart(cSem, {type: 'bar', data: {labels: D.semanal.labels, datasets: stack(D.semanal.series)},
+ options: {maintainAspectRatio: false, plugins: {tooltip: {callbacks: {title: c => `Semana de ${c[0].label}`, label: c => `${c.dataset.label}: ${fmt(c.raw)} h`}}}, scales: {y: {title: {display: true, text: 'horas/semana'}}}}});
+new Chart(cDia, {type: 'bar', data: {labels: D.diario.labels, datasets: [...stack(D.diario.series),
+ {label: hm(M.ref), type: 'line', data: D.diario.labels.map(() => M.ref), borderColor: W, borderDash: [5, 4], pointRadius: 0, borderWidth: 1.5}]},
+ options: {maintainAspectRatio: false, plugins: {tooltip: tip(hm)}, scales: {x: {ticks: {maxTicksLimit: 14}}, y: {title: {display: true, text: 'min/dia'}}}}});
+new Chart(cHora, {type: 'bar', data: {labels: D.hora.labels, datasets: stack(D.hora.series)},
+ options: {maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: tip(v => `${fmt(v)} min/dia`)}}});
+new Chart(cDow, {type: 'bar', data: {labels: ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'], datasets: [{data: D.dow, backgroundColor: D.dow.map((_, i) => i >= 5 ? COR[1] : COR[0])}]},
+ options: {maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => hm(c.raw)}}}}});
+
+const U = D.util;
+kp('kpisU', U.kpis); ins('insU', U.insights);
+new Chart(cUMes, {type: 'bar', data: {labels: U.mes.map(m => m.mes), datasets: [
+ {label: 'Dia útil', data: U.mes.map(m => m.util), backgroundColor: COR[0]}, {label: 'Fim de semana', data: U.mes.map(m => m.fds), backgroundColor: COR[1]}]},
+ options: {maintainAspectRatio: false, plugins: {tooltip: tip(v => `${hm(v)}/dia`)}, scales: {y: {title: {display: true, text: 'min/dia'}}}}});
+new Chart(cUHora, {type: 'line', data: {labels: D.hora.labels, datasets: [
+ {label: 'Dia útil', data: U.hora.util, borderColor: COR[0], backgroundColor: COR[0], tension: .3, pointRadius: 0, borderWidth: 2.5},
+ {label: 'Fim de semana', data: U.hora.fds, borderColor: COR[1], backgroundColor: COR[1], tension: .3, pointRadius: 0, borderWidth: 2.5}]},
+ options: {maintainAspectRatio: false, interaction: {mode: 'index', intersect: false}, plugins: {tooltip: tip(v => `${fmt(v)} min`)}}});
+tDow.innerHTML = `<tr><th>Dia</th><th class="n">Média</th><th class="n">Mediana</th><th class="n">Dias c/ uso</th><th class="n">&gt;${hm(M.ref)}</th><th class="n">Máx.</th></tr>` +
+ U.por_dia.map(d => `<tr><td>${d.dow}</td><td class="n">${d.media}</td><td class="n">${d.mediana}</td><td class="n">${d.ativos}</td><td class="n">${d.acima}</td><td class="n">${d.max}</td></tr>`).join('');
+tUCan.innerHTML = '<tr><th>Canais em dias úteis</th><th class="n">Horas</th></tr>' + U.canais.map(c => `<tr><td>${esc(c[0])}</td><td class="n">${fmt(c[1])}</td></tr>`).join('');
+
+new Chart(cCat, {type: 'bar', data: {labels: D.categorias.map(c => c.cat), datasets: [{data: D.categorias.map(c => c.h), backgroundColor: COR[0]}]},
+ options: {indexAxis: 'y', maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => `${fmt(c.raw)} h (${D.categorias[c.dataIndex].pct}%)`}}}, scales: {x: {title: {display: true, text: 'horas'}}}}});
+tMes.innerHTML = '<tr><th>Mês</th><th class="n">Horas</th><th class="n">Média/dia</th><th class="n">Vídeos</th><th class="n">Dias ativos</th>' + (M.perfis_kids.length ? '<th class="n">% perfil principal</th>' : '') + '</tr>' +
+ D.mensal.map(m => `<tr><td>${m.mes}</td><td class="n">${fmt(m.h)}</td><td class="n">${m.media}</td><td class="n">${m.n}</td><td class="n">${m.ativos}</td>` + (M.perfis_kids.length ? `<td class="n">${m.pct_principal}%</td>` : '') + '</tr>').join('');
+tCan.innerHTML = '<tr><th>#</th><th>Canal</th><th class="n">Horas</th><th class="n">Vídeos</th>' + P.map(p => `<th class="n">${esc(p)}</th>`).join('') + '</tr>' +
+ D.canais.map((c, i) => `<tr><td>${i + 1}</td><td>${esc(c.canal)}</td><td class="n">${fmt(c.h)}</td><td class="n">${c.n}</td>` + c.por_perfil.map(v => `<td class="n">${v}</td>`).join('') + '</tr>').join('') +
+ `<tr><td></td><td class="note" colspan="${3 + P.length}">${D.n_canais} canais infantis distintos no período.</td></tr>`;
+tRep.innerHTML = '<tr><th>Vídeo</th><th class="n">Vezes</th></tr>' + D.repetidos.map(r => `<tr><td>${esc(r.titulo)}<br><span class="note">${esc(r.canal)}</span></td><td class="n">${r.n}</td></tr>`).join('');
+tSes.innerHTML = '<tr><th>Início</th><th>Perfil</th><th class="n">Duração</th><th class="n">Vídeos</th></tr>' + D.sessoes.map(s => `<tr><td>${s.ini}</td><td>${esc(s.perfil)}</td><td class="n">${s.dur}</td><td class="n">${s.n}</td></tr>`).join('');
+
+metodo.innerHTML = `<p><b>Tempo assistido é estimado.</b> O Takeout registra só o horário em que cada vídeo foi aberto. Cada vídeo recebe o tempo até o próximo vídeo do mesmo perfil, limitado a ${M.cap} min; intervalos maiores encerram a sessão e o último vídeo dela recebe ${M.ult} min.</p>
+<p><b>Classificação infantil.</b> Tudo o que foi visto em perfis do YouTube Kids (${M.perfis_kids.length ? esc(M.perfis_kids.join(', ')) : 'nenhum encontrado'}) conta como infantil. No perfil principal, conta o vídeo cujo canal está na lista de canais infantis ou cujo título tem termos claros (infantil, historinha, princesas etc.). A lista fica em <code>sistema/config.json</code> e pode ser editada.${M.sem_titulo ? ` ${M.sem_titulo} vídeos dos perfis Kids ficaram sem título (indisponíveis ou consulta limitada pelo YouTube).` : ''}</p>
+<p><b>Base.</b> ${M.total_videos.toLocaleString('pt-BR')} vídeos acumulados desde ${M.historico_desde}. Não dá para saber quem estava assistindo no perfil principal; vídeos vistos sem login ou com o histórico pausado não aparecem.</p>`;
+</script>
+</body></html>

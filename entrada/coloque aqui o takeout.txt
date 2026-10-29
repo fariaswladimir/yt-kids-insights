@@ -1,0 +1,2 @@
+Coloque aqui o .zip do Google Takeout (ou a pasta extraida) e rode "1 - Processar agora.bat".
+Se a janela "2 - Vigiar pasta" estiver aberta, o processamento comeca sozinho.
